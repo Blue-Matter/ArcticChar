@@ -1,16 +1,20 @@
 Package: ArcticChar
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Evalauting management options for Cambridge Bay Arctic Char stocks. 
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Tom", "Carruthers",
+      email = "tom@bluematterscience.com",
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: Operating models for testing experimental designs and management procedures. 
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
+LazyLoad: true
+RoxygenNote: 7.3.3
+VignetteBuilder: knitr
+Depends: 
+    R (>= 3.5)
