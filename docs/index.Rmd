@@ -2,7 +2,12 @@
 title: "Management Decision Support Tools for Cambridge Bay Arctic Char"
 author: "Tom Carruthers <tom@bluematterscience.com>"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output: 
+  rmarkdown::html_document:
+    number_sections: yes
+    toc: true
+    toc_float: true
+always_allow_html: yes
 ---
 &nbsp;
 
@@ -261,7 +266,130 @@ These operating models can be used to design data collection and management proc
 
 ***
 
-## Software and Code
+## The ArcticChar R Package
+
+### Functionality
+
+The aim of the R package is to provide a single source for objects (data inputs, fitted operating models) and code (management options, custom figures) used in the provision of management advice. These are intended to be public-facing and pubically available in support of peer review. By building the package from a GitHub repository progress and features can be tracked and version control can be implemented. 
+
+### Installation
+
+The Arctic Char R package uses the openMSE libraries for fitting operating models and conducting simulation tests. To install openMSE:
+
+
+```{r installation_openMSE, eval=F, echo=T}
+
+install.packages('openMSE')
+
+```
+
+Using the remotes package, the latest version of the ArcticChar R package can be installed driectly from the GitHub repo: 
+
+```{r installation, eval=F, echo=T}
+
+library(remotes)
+install_github('Blue-Matter/ArcticChar')
+
+```
+
+You can check package versions using: 
+
+```{r check_version, eval=F, echo=T}
+
+packageVersion('openMSE')
+packageVersion('ArcticChar')
+
+```
+
+### Objects
+
+In this preliminary version, ArcticChar only includes a small number of demonstration objects. One of those is the RCM fitting object for Ekalluk River and the resulting operating model. You can find those using the avail function:
+
+```{r objects, eval=F, echo=T}
+library(ArcticChar)
+avail('RCModel') # the available RCM fitted models
+avail('OM')      # the operating model resulting from those fits
+
+class?OM         # help documentation about operating models
+class?RCModel    # help documentation on RCM model fit objects
+ 
+```
+
+
+### Examining input data
+
+```{r inputdata, eval=T, echo=T}
+library(ArcticChar)
+data = Fit_Ekalluk@data        # Take the input data from the fitted RCM model
+class(data)                    # What class is is this
+class?RCMdata                  # Find out more about how data is formatted for RCM
+
+yearlabel = data@Misc$CurrentYr - (data@Misc$nyears-1):0 # make the right year label
+plot(yearlabel, data@Chist, xlab="Year", ylab = "Catches (kg)") # plot the catches
+
+```
+
+### Plotting model fit
+
+To generate an html report file for a fitted RCM object, you can use the generic plot method: 
+
+```{r plotfit, eval=F, echo=T}
+library(ArcticChar)
+plot(Fit_Ekalluk)
+
+```
+
+The same works for the OM object:
+
+```{r plotOM, eval=F, echo=T}
+plot(OM_Ekalluk)
+```
+
+### Example closed-loop simulations
+
+Operating models are used to test management options over projected years. 
+
+First start by reconstructing the historical fishery and calculate all management reference points using Simulate:
+
+```{r hist, eval=T, echo=T}
+Hist = Simulate(OM_Ekalluk)
+?Simulate              # help documentation
+```
+
+Note this returns a warning abotu index 1 which is a placeholder and only has one observation - openMSE cannot calculate statistical properties of indices if the only have 1 observation!
+
+You can now select a management option and do a projection: 
+
+```{r proj, eval=T, echo=T}
+
+avail('MP')                  # all the available management options
+myMPs = c("NFref", "FMSYref50", "FMSYref75", "FMSYref") # lets just project zero fishing and three fractions of perfectly implmented FMSY fishing
+MSE = Project(Hist, myMPs)
+
+```
+
+The MSE object contains all the information about the projections such as catches, spawning biomass, recruitment etc. You can make your own plotting methods or just use the generic tools in openMSE such as the 'simple plot' Splot():
+
+```{r splot, eval=T, echo=T}
+Splot(MSE)
+class?MSE  # find out more about objects of class MSE
+```
+
+There are also some DFO-specific performance plots:
+
+```{r dfo_plot, eval=T, echo=T}
+DFO_proj(MSE) # overfishing / underfishing at the end of the time series
+?DFO_proj     # help documentation
+```
+
+### R package development
+
+Over the project, data inputs are to be refined, operating models conditioned on data, custom management options tested and bespoke plots and performance metrics will be codified. 
+
+
+***
+
+## Links to Software and Code
 
 [Rapid Conditioning Model (RCM) (Huynh 2024)](https://samtool.openmse.com/reference/RCM.html)
 
