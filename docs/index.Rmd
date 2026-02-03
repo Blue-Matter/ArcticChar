@@ -433,8 +433,8 @@ You can take a look at some of the standard equilibrium reference points that ar
 
 round(head(Hist@Ref$ReferencePoints),3)     # First 6 simulations
 hist(Hist@Ref$ReferencePoints$BMSY_B0)      # Histogram of BMSY relative to unfished
-Hist@Ref$Dynamic_Unfished                   # Dynamic reference points 
-Hist@Ref$ByYear                             # Reference points that are annual
+names(Hist@Ref$Dynamic_Unfished)                   # Dynamic reference points 
+names(Hist@Ref$ByYear)                             # Reference points that are annual
 
 ```
 
@@ -508,7 +508,7 @@ To use the app you should save the operating model object to your computer, open
 saveRDS(Fit_Ekalluk@OM, file="C:/temp/my_fitted_OM.rds") # this is the file you upload to the RPC app
 ```
 
-<img src="Images/RPC.png" width="400">
+<img src="Images/RPC.png" width="500">
 
 ### Empirical Management Procedures
 
@@ -572,7 +572,7 @@ Splot(myProj)
 
 ```
 
-<img src="Images/MPdemo.png" width="400">
+<img src="Images/MPdemo.png" width="500">
 
 In this example, recent catches were too high to be maintained and crashed the stock withing 15 years. The responsive index based MP responded to available biomass and keep the stock near BMSY levels. 
 
